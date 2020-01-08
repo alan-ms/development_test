@@ -1,0 +1,16 @@
+version: '2'
+services:
+  development_test-app:
+    image: development_test
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://development_test-postgresql:5432/development_test
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+    ports:
+      - 8080:8080
+  development_test-postgresql:
+    extends:
+      file: postgresql.yml
+      service: development_test-postgresql

@@ -1,0 +1,37 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "br.com.develoment_test"
+    },
+    "jhipsterVersion": "6.6.0",
+    "applicationType": "monolith",
+    "baseName": "development_test",
+    "packageName": "br.com.develoment_test",
+    "packageFolder": "br/com/develoment_test",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZGIzOGViZTkxMjBiMTljYTcyODUyMmM3YzdjYWExNWExNTZhZjNmMjliMDM2Y2RlYTBiMDU2MTMwM2YxMmI2ZTZjMGNkZWI2NTQ4OTJiZDkzMDkwMjRiZDVhZjQ3NzNiNjVjNjc1M2NkMWExNGZmYzFhY2YyYjkzOGRkMDZmMjY=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "skipClient": true,
+    "creationTimestamp": 1578459244989,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "blueprints": []
+  }
+}
