@@ -1,0 +1,6 @@
+type Mutation {
+#   Criar conta de usuário
+    registerAccount(user: StoreUser): User
+#   Realizar login
+    authorize(loginVM: LoginUser): JWTToken
+}

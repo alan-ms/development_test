@@ -1,0 +1,7 @@
+type Authority {
+    name: String!
+}
+
+input ShowAuthority {
+    name: String!
+}

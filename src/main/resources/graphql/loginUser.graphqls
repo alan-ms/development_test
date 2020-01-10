@@ -1,0 +1,10 @@
+type LoginVM {
+    username: String!
+    password: String!
+    rememberMe: Boolean!
+}
+
+input LoginUser {
+    username: String!
+    password: String!
+}

@@ -1,0 +1,7 @@
+type User {
+    id: ID
+    login: String
+    email: String
+    activated: String
+    authorities: [Authority]
+}
