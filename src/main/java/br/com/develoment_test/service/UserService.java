@@ -170,7 +170,6 @@ public class UserService {
 	                user.setEmail(email.toLowerCase());
                 }
                 user.setLangKey(langKey);
-                log.debug("Changed Information for User: {}", user);
             });
     }
 
@@ -200,10 +199,26 @@ public class UserService {
             .map(UserDTO::new);
     }
 
+//    public Optional<UserDTO> updateAuthorityUser(Long userId, String authority) {
+//
+//        return Optional.of(userRepository.findById(userId))
+//            .filter(Optional::isPresent)
+//            .map(Optional::get)
+//            .map(user -> {
+//                User userChangeAuthority = userRepository.getOne(userId);
+//                Set<String> authorities = userChangeAuthority.getAuthorities().stream().
+//                    map(Authority::getName)
+//                    .collect(Collectors.toSet());
+//                authorities.stream()
+//                    .map(authorityRepository::findById)
+//                    .filter(Optional::isPresent)
+//                    .map(Optional::get);
+//            })
+//    }
+
     public void deleteUser(String login) {
         userRepository.findOneByLogin(login).ifPresent(user -> {
             userRepository.delete(user);
-            log.debug("Deleted User: {}", user);
         });
     }
 
@@ -217,7 +232,6 @@ public class UserService {
                 }
                 String encryptedPassword = passwordEncoder.encode(newPassword);
                 user.setPassword(encryptedPassword);
-                log.debug("Changed password for User: {}", user);
             });
     }
 

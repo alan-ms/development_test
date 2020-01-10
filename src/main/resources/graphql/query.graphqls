@@ -1,3 +1,4 @@
 type Query {
-
+#   Pegar a lista de Perfis do sistema
+    getAuthorities: [String]
 }
