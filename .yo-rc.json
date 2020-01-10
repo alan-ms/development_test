@@ -27,7 +27,7 @@
     "skipClient": true,
     "creationTimestamp": 1578459244989,
     "testFrameworks": [],
-    "jhiPrefix": "jhi",
+    "jhiPrefix": "",
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [],
