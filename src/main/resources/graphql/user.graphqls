@@ -10,5 +10,5 @@ input StoreUser {
     login: String!
     email: String!
     langKey: String!
-    password: String
+    password: String!
 }

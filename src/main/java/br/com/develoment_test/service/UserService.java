@@ -191,27 +191,15 @@ public class UserService {
             .map(UserDTO::new);
     }
 
-//    public Optional<UserDTO> updateAuthorityUser(Long userId, String authority) {
-//
-//        return Optional.of(userRepository.findById(userId))
-//            .filter(Optional::isPresent)
-//            .map(Optional::get)
-//            .map(user -> {
-//                User userChangeAuthority = userRepository.getOne(userId);
-//                Set<String> authorities = userChangeAuthority.getAuthorities().stream().
-//                    map(Authority::getName)
-//                    .collect(Collectors.toSet());
-//                authorities.stream()
-//                    .map(authorityRepository::findById)
-//                    .filter(Optional::isPresent)
-//                    .map(Optional::get);
-//            })
-//    }
+    public User upgradeAuthoritiesUser(String loginUser) {
+        User upgradeUser = userRepository.findByLogin(loginUser);
+        Set<Authority> authorities = upgradeUser.getAuthorities();
+        authorities.add(authorityRepository.getOne(AuthoritiesConstants.ADMIN));
+        return userRepository.save(upgradeUser);
+    }
 
     public void deleteUser(String login) {
-        userRepository.findOneByLogin(login).ifPresent(user -> {
-            userRepository.delete(user);
-        });
+        userRepository.findOneByLogin(login).ifPresent(userRepository::delete);
     }
 
     public void changePassword(String currentClearTextPassword, String newPassword) {

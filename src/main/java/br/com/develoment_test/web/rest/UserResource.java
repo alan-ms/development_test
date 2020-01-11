@@ -5,6 +5,7 @@ import br.com.develoment_test.repository.UserRepository;
 import br.com.develoment_test.security.AuthoritiesConstants;
 import br.com.develoment_test.service.MailService;
 import br.com.develoment_test.service.UserService;
+import br.com.develoment_test.service.UserWithLoginNotExists;
 import br.com.develoment_test.service.dto.UserDTO;
 import br.com.develoment_test.web.rest.errors.BadRequestAlertException;
 import br.com.develoment_test.web.rest.errors.EmailAlreadyUsedException;
@@ -12,7 +13,6 @@ import br.com.develoment_test.web.rest.errors.LoginAlreadyUsedException;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,6 +72,14 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
         this.mailService = mailService;
     }
 
+    public User upgradeUser(String login) {
+        if(!userRepository.findOneByLogin(login).isPresent()) {
+            throw new UserWithLoginNotExists();
+        } else {
+            return userService.upgradeAuthoritiesUser(login);
+        }
+    }
+
     /**
      * {@code CREATE }  : Creates a new user.
      * <p>
@@ -110,7 +118,7 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
      */
     @PreAuthorize("@functionalityRepository." +
         "getByNameAndAuthority_Name(\"updateUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<UserDTO> updateUser(@Valid UserDTO userDTO) {
+    public Optional<UserDTO> updateUser(@Valid UserDTO userDTO) {
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new EmailAlreadyUsedException();
@@ -119,10 +127,7 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
-        Optional<UserDTO> updatedUser = userService.updateUser(userDTO);
-
-        return ResponseUtil.wrapOrNotFound(updatedUser,
-            HeaderUtil.createAlert(applicationName, "A user is updated with identifier " + userDTO.getLogin(), userDTO.getLogin()));
+        return userService.updateUser(userDTO);
     }
 
     /**

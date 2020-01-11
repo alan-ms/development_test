@@ -17,7 +17,8 @@ type Mutation {
     createFunctionality(functionality: StoreFunctionality): Functionality!
 #   Alteração de funcionalidade
     updateFunctionality(functionality: UpdateFunctionality): Functionality!
-
+#   Aumenta o nível de um usuário através do login
+    upgradeUser(login: String!): User
 }
 
 
