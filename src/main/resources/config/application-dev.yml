@@ -62,8 +62,8 @@ spring:
   mail:
     host: smtp-mail.outlook.com
     port: 587
-    username: darth464@hotmail.com.br
-    password: Alan84267913
+    username: 
+    password:
     protocol: smtp
     tls: true
     properties.mail.smtp:
