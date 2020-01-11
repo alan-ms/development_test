@@ -1,0 +1,13 @@
+FROM openjdk:8-jdk-alpine
+
+RUN mkdir /development_test
+
+WORKDIR /development_test
+
+COPY . /development_test
+
+RUN ./mvnw -Pprod clean verify
+
+EXPOSE 8080
+
+#CMD ["./jhipster-0.0.1-SNAPSHOT.jar"]

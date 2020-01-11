@@ -41,8 +41,7 @@ public class FunctionalityResource implements GraphQLMutationResolver, GraphQLQu
      *
      * @param functionality the functionality.graphqls to create.
      */
-    @PreAuthorize("@functionalityRepository." +
-        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+
     public Functionality createFunctionality(@Valid Functionality functionality) throws URISyntaxException {
         if (functionality.getId() != null) {
             throw new BadRequestAlertException("A new functionality.graphqls cannot already have an ID", ENTITY_NAME, "idexists");

@@ -5,7 +5,8 @@ services:
     # volumes:
     #     - ~/volumes/jhipster/development_test/postgresql/:/var/lib/postgresql/data/
     environment:
+      - POSTGRES_DB=development_test
       - POSTGRES_USER=development_test
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=development_test
     ports:
       - 5432:5432
