@@ -10,3 +10,14 @@ type UserDTO  {
     lastModifiedDate: String
     authorities: [String]
 }
+
+input BasicUpdateUser{
+    email: String!
+    langKey: String!
+}
+
+input StoreUserDTO {
+    login: String!
+    email: String!
+    langKey: String!
+}

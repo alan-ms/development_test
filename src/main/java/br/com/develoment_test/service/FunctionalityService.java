@@ -27,13 +27,12 @@ public class FunctionalityService {
     }
 
     /**
-     * Save a functionality.
+     * Save a functionality.graphqls.
      *
      * @param functionality the entity to save.
      * @return the persisted entity.
      */
     public Functionality save(Functionality functionality) {
-        log.debug("Request to save Functionality : {}", functionality);
         return functionalityRepository.save(functionality);
     }
 
@@ -50,7 +49,7 @@ public class FunctionalityService {
 
 
     /**
-     * Get one functionality by id.
+     * Get one functionality.graphqls by id.
      *
      * @param id the id of the entity.
      * @return the entity.
@@ -62,7 +61,7 @@ public class FunctionalityService {
     }
 
     /**
-     * Delete the functionality by id.
+     * Delete the functionality.graphqls by id.
      *
      * @param id the id of the entity.
      */

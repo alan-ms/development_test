@@ -5,6 +5,23 @@ type Mutation {
     authorize(loginVM: LoginUser): JWTToken!
 #   Requisitando o reset do senha
     requestPasswordReset(email: String): String!
-##   Finalização do reset de senha
+#   Finalização do reset de senha
     finishPasswordReset(keyPassword: StoreKeyPassword): String
+#   Alteraração básica do usuário
+    saveAccount(user: BasicUpdateUser): Boolean
+#   Alteração da senha
+    changePassword(passwordChangeDTO: PasswordChange): Boolean
+#   Cria um usuário mas com uma senha rondamica para alteração posterior
+    createUser(user: StoreUserDTO): User
+#   Cria uma funcionalidade
+    createFunctionality(functionality: StoreFunctionality): Functionality!
+#   Alteração de funcionalidade
+    updateFunctionality(functionality: UpdateFunctionality): Functionality!
+
+}
+
+
+input PasswordChange{
+    currentPassword: String!
+    newPassword: String!
 }

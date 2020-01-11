@@ -4,6 +4,8 @@ import br.com.develoment_test.domain.Functionality;
 import br.com.develoment_test.security.AuthoritiesConstants;
 import br.com.develoment_test.service.FunctionalityService;
 import br.com.develoment_test.web.rest.errors.BadRequestAlertException;
+import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +21,11 @@ import java.util.Optional;
  * GraphQL controller for managing {@link br.com.develoment_test.domain.Functionality}.
  */
 @Component
-public class FunctionalityResource {
+public class FunctionalityResource implements GraphQLMutationResolver, GraphQLQueryResolver {
 
     private final Logger log = LoggerFactory.getLogger(FunctionalityResource.class);
 
-    private static final String ENTITY_NAME = "functionality";
+    private static final String ENTITY_NAME = "functionality.graphqls";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -35,26 +37,26 @@ public class FunctionalityResource {
     }
 
     /**
-     * {@code GraphQL createFunctionality } : Create a new functionality.
+     * {@code GraphQL createFunctionality } : Create a new functionality.graphqls.
      *
-     * @param functionality the functionality to create.
+     * @param functionality the functionality.graphqls to create.
      */
     @PreAuthorize("@functionalityRepository." +
-        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
+        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public Functionality createFunctionality(@Valid Functionality functionality) throws URISyntaxException {
         if (functionality.getId() != null) {
-            throw new BadRequestAlertException("A new functionality cannot already have an ID", ENTITY_NAME, "idexists");
+            throw new BadRequestAlertException("A new functionality.graphqls cannot already have an ID", ENTITY_NAME, "idexists");
         }
         return functionalityService.save(functionality);
     }
 
     /**
-     * {@code GraphQL updateFunctionality } : Updates an existing functionality.
+     * {@code GraphQL updateFunctionality } : Updates an existing functionality.graphqls.
      *
-     * @param functionality the functionality to update.
+     * @param functionality the functionality.graphqls to update.
      */
     @PreAuthorize("@functionalityRepository." +
-        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
+        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public Functionality updateFunctionality(@Valid Functionality functionality) throws URISyntaxException {
         if (functionality.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -66,15 +68,15 @@ public class FunctionalityResource {
      * {@code GrahpQL getAllFunctionalities } : get all the functionalities.
      */
     @PreAuthorize("@functionalityRepository." +
-        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
+        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public List<Functionality> getAllFunctionalities() {
         return functionalityService.findAll();
     }
 
     /**
-     * {@code GraphQL getFunctionality } : get the "id" functionality.
+     * {@code GraphQL getFunctionality } : get the "id" functionality.graphqls.
      *
-     * @param id the id of the functionality to retrieve.
+     * @param id the id of the functionality.graphqls to retrieve.
      */
     @PreAuthorize("@functionalityRepository." +
         "getByNameAndAuthority_Name(\"getFunctionality\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
@@ -83,12 +85,12 @@ public class FunctionalityResource {
     }
 
     /**
-     * {@code GraphQL deleteFunctionality } : delete the "id" functionality.
+     * {@code GraphQL deleteFunctionality } : delete the "id" functionality.graphqls.
      *
-     * @param id the id of the functionality to delete.
+     * @param id the id of the functionality.graphqls to delete.
      */
     @PreAuthorize("@functionalityRepository." +
-        "getByNameAndAuthority_Name(\"getFunctionality\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
+        "getByNameAndAuthority_Name(\"getFunctionality\", \"" + AuthoritiesConstants.ADMIN + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public String deleteFunctionality(Long id) {
         functionalityService.delete(id);
         return ENTITY_NAME + ": " + id.toString();

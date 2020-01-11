@@ -140,14 +140,6 @@ public class UserService {
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
         user.setActivated(true);
-//        if (userDTO.getAuthorities() != null) {
-//            Set<Authority> authorities = userDTO.getAuthorities().stream()
-//                .map(authorityRepository::findById)
-//                .filter(Optional::isPresent)
-//                .map(Optional::get)
-//                .collect(Collectors.toSet());
-//            user.setAuthorities(authorities);
-//        }
         Authority authority = authorityRepository.getOne("ROLE_USER");
         Set<Authority> authorities = new HashSet<>();
         authorities.add(authority);
@@ -157,7 +149,7 @@ public class UserService {
     }
 
     /**
-     * Update basic information (first name, last name, email, language) for the current user.
+     * Update basic information (email, language) for the current user.
      *
      * @param email     email id of user.
      * @param langKey   language key.

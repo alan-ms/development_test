@@ -1,6 +1,12 @@
 type Query {
-#   Pegar a lista de Perfis do sistema
+#   Lista os Perfis do sistema
     getAuthorities: [String]
-#   Pegar todos os usuários
+#   Mostra detalhes de usuário pelo login
     getUser(login: String!): UserDTO
+#   Lista todas as funcionalidades cadastradas
+    getAllFunctionalities: [Functionality]!
+#   Mostra uma detalhes de um funcionalidade
+    getFunctionality(id: Int!): Functionality
+#   Delete uma funcionalidade - PERFIL DE ADMIN
+    deleteFunctionality(id: Int!): String
 }

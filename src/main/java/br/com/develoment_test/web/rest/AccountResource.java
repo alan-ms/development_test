@@ -125,7 +125,7 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      */
     @PreAuthorize("@functionalityRepository." +
         "getByNameAndAuthority_Name(\"saveAccount\", \"" + AuthoritiesConstants.USER + "\") != null")
-    public void saveAccount(@Valid UserDTO userDTO) {
+    public Boolean saveAccount(@Valid UserDTO userDTO) {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException("Current user login not found"));
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
@@ -137,6 +137,7 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
         }
         userService.updateUser(userDTO.getEmail(),
             userDTO.getLangKey());
+        return true;
     }
 
     /**
@@ -147,11 +148,12 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      */
     @PreAuthorize("@functionalityRepository." +
         "getByNameAndAuthority_Name(\"changePassword\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
-    public void changePassword(PasswordChangeDTO passwordChangeDto) {
+    public boolean changePassword(PasswordChangeDTO passwordChangeDto) {
         if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }
         userService.changePassword(passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
+        return true;
     }
 
     /**

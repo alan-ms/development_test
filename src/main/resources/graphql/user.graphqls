@@ -9,5 +9,6 @@ type User {
 input StoreUser {
     login: String!
     email: String!
+    langKey: String!
     password: String
 }

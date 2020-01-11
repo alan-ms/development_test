@@ -1,0 +1,16 @@
+type Functionality {
+    id: ID
+    name: String
+    authority: Authority
+}
+
+input StoreFunctionality {
+    name: String!
+    authority: ShowAuthority
+}
+
+input UpdateFunctionality {
+    id: Int!
+    name: String!
+    authority: ShowAuthority!
+}

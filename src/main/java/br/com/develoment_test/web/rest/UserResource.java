@@ -96,9 +96,7 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
         } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();
         } else {
-            User newUser = userService.createUser(userDTO);
-            mailService.sendCreationEmail(newUser);
-            return newUser;
+            return userService.createUser(userDTO);
         }
     }
 
