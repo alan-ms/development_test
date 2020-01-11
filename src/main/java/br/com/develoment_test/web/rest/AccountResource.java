@@ -3,6 +3,7 @@ package br.com.develoment_test.web.rest;
 
 import br.com.develoment_test.domain.User;
 import br.com.develoment_test.repository.UserRepository;
+import br.com.develoment_test.security.AuthoritiesConstants;
 import br.com.develoment_test.security.SecurityUtils;
 import br.com.develoment_test.service.MailService;
 import br.com.develoment_test.service.UserService;
@@ -20,9 +21,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,22 +50,24 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
     private final MailService mailService;
 
     public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
-
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
     }
 
     /**
-     * {@code POST  /register} : register the user.
+     * {@code GraphQL registerAccount } : register the user.
      *
      * @param managedUserVM the managed user View Model.
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
      */
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"registerAccount\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
     @ResponseStatus(HttpStatus.CREATED)
-    public User registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
+    public User registerAccount(@Valid ManagedUserVM managedUserVM) {
+        System.out.println();
         if (!checkPasswordLength(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
@@ -74,12 +76,14 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
     }
 
     /**
-     * {@code GET  /activate} : activate the registered user.
+     * {@code GraphQL activateAccount } : activate the registered user.
      *
      * @param key the activation key.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be activated.
      */
-    public void activateAccount(@RequestParam(value = "key") String key) {
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"activateAccount\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
+    public void activateAccount(String key) {
         Optional<User> user = userService.activateRegistration(key);
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this activation key");
@@ -87,21 +91,25 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
     }
 
     /**
-     * {@code isAuthenticated} : check if the user is authenticated, and return its login.
+     * {@code isAuthenticated } : check if the user is authenticated, and return its login.
      *
      * @param request the HTTP request.
      * @return the login if the user is authenticated.
      */
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"isAuthenticated\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
     public String isAuthenticated(HttpServletRequest request) {
         return request.getRemoteUser();
     }
 
     /**
-     * {@code GET  /account} : get the current user.
+     * {@code GraphQL } : get the current user.
      *
      * @return the current user.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
      */
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"getAccount\", \"" + AuthoritiesConstants.USER + "\") != null")
     public UserDTO getAccount() {
         return userService.getUserWithAuthorities()
             .map(UserDTO::new)
@@ -115,8 +123,9 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user login wasn't found.
      */
-
-    public void saveAccount(@Valid @RequestBody UserDTO userDTO) {
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"saveAccount\", \"" + AuthoritiesConstants.USER + "\") != null")
+    public void saveAccount(@Valid UserDTO userDTO) {
         String userLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new AccountResourceException("Current user login not found"));
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
@@ -136,7 +145,9 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      * @param passwordChangeDto current and new password.
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the new password is incorrect.
      */
-    public void changePassword(@RequestBody PasswordChangeDTO passwordChangeDto) {
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"changePassword\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
+    public void changePassword(PasswordChangeDTO passwordChangeDto) {
         if (!checkPasswordLength(passwordChangeDto.getNewPassword())) {
             throw new InvalidPasswordException();
         }
@@ -149,7 +160,9 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      * @param mail the mail of the user.
      * @throws EmailNotFoundException {@code 400 (Bad Request)} if the email address is not registered.
      */
-    public void requestPasswordReset(@RequestBody String mail) {
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"requestPasswordReset\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
+    public void requestPasswordReset(String mail) {
        mailService.sendPasswordResetMail(
            userService.requestPasswordReset(mail)
                .orElseThrow(EmailNotFoundException::new)
@@ -163,7 +176,9 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the password could not be reset.
      */
-    public void finishPasswordReset(@RequestBody KeyAndPasswordVM keyAndPassword) {
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"finishPasswordReset\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
+    public void finishPasswordReset(KeyAndPasswordVM keyAndPassword) {
         if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
             throw new InvalidPasswordException();
         }

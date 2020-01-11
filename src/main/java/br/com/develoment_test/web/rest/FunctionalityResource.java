@@ -1,21 +1,17 @@
 package br.com.develoment_test.web.rest;
 
 import br.com.develoment_test.domain.Functionality;
+import br.com.develoment_test.security.AuthoritiesConstants;
 import br.com.develoment_test.service.FunctionalityService;
 import br.com.develoment_test.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +39,9 @@ public class FunctionalityResource {
      *
      * @param functionality the functionality to create.
      */
-    public Optional<Functionality> createFunctionality(@Valid Functionality functionality) throws URISyntaxException {
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
+    public Functionality createFunctionality(@Valid Functionality functionality) throws URISyntaxException {
         if (functionality.getId() != null) {
             throw new BadRequestAlertException("A new functionality cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -55,7 +53,9 @@ public class FunctionalityResource {
      *
      * @param functionality the functionality to update.
      */
-    public Optional<Functionality> updateFunctionality(@Valid Functionality functionality) throws URISyntaxException {
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
+    public Functionality updateFunctionality(@Valid Functionality functionality) throws URISyntaxException {
         if (functionality.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -65,17 +65,21 @@ public class FunctionalityResource {
     /**
      * {@code GrahpQL getAllFunctionalities } : get all the functionalities.
      */
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
     public List<Functionality> getAllFunctionalities() {
         return functionalityService.findAll();
     }
 
     /**
-     * {@code GraphQLgetFunctionality } : get the "id" functionality.
+     * {@code GraphQL getFunctionality } : get the "id" functionality.
      *
      * @param id the id of the functionality to retrieve.
      */
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"getFunctionality\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
     public Optional<Functionality> getFunctionality(Long id) {
-        return functionalityService.findOne(id); 
+        return functionalityService.findOne(id);
     }
 
     /**
@@ -83,6 +87,8 @@ public class FunctionalityResource {
      *
      * @param id the id of the functionality to delete.
      */
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"getFunctionality\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
     public String deleteFunctionality(Long id) {
         functionalityService.delete(id);
         return ENTITY_NAME + ": " + id.toString();

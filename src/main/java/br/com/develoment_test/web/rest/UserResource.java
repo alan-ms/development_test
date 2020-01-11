@@ -2,6 +2,7 @@ package br.com.develoment_test.web.rest;
 
 import br.com.develoment_test.domain.User;
 import br.com.develoment_test.repository.UserRepository;
+import br.com.develoment_test.security.AuthoritiesConstants;
 import br.com.develoment_test.service.MailService;
 import br.com.develoment_test.service.UserService;
 import br.com.develoment_test.service.dto.UserDTO;
@@ -21,8 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -87,7 +88,8 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already in use.
      */
-//    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
     public User createUser(@Valid UserDTO userDTO) throws URISyntaxException {
 
         if (userDTO.getId() != null) {
@@ -112,7 +114,8 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already in use.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already in use.
      */
-//    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"updateUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
     public ResponseEntity<UserDTO> updateUser(@Valid UserDTO userDTO) {
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
@@ -134,6 +137,8 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"getAllUsers\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
@@ -144,7 +149,8 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
      * Gets a list of all roles.
      * @return a string list of all roles.
      */
-//    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"getAuthorities\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
     public List<String> getAuthorities() {
         return userService.getAuthorities();
     }
@@ -156,10 +162,9 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
 //    @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
-        return ResponseUtil.wrapOrNotFound(
-            userService.getUserWithAuthoritiesByLogin(login)
-                .map(UserDTO::new));
+    public Optional<UserDTO> getUser(String login) {
+        return userService.getUserWithAuthoritiesByLogin(login)
+                .map(UserDTO::new);
     }
 
     /**
@@ -168,9 +173,9 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
      * @param login the login of the user to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-//    @DeleteMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
-//    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<Void> deleteUser(@PathVariable String login) {
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"deleteUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
+    public ResponseEntity<Void> deleteUser(String login) {
         userService.deleteUser(login);
         return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName,  "A user is deleted with identifier " + login, login)).build();
     }

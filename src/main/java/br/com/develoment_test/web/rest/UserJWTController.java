@@ -1,9 +1,11 @@
 package br.com.develoment_test.web.rest;
 
+import br.com.develoment_test.security.AuthoritiesConstants;
 import br.com.develoment_test.security.jwt.TokenProvider;
 import br.com.develoment_test.web.rest.vm.LoginVM;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,8 @@ public class UserJWTController implements GraphQLMutationResolver {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"authorize\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
     public JWTToken authorize(@Valid LoginVM loginVM) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
