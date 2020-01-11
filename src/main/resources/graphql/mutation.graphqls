@@ -7,22 +7,21 @@ type Mutation {
     requestPasswordReset(email: String): String!
 #   Finalização do reset de senha
     finishPasswordReset(keyPassword: StoreKeyPassword): String
-#   Alteraração básica do usuário
+#   Alteraração básica do usuário logado
     saveAccount(user: BasicUpdateUser): Boolean
-#   Alteração da senha
+#   Alteração da senha do usuário logado
     changePassword(passwordChangeDTO: PasswordChange): Boolean
 #   Cria um usuário mas com uma senha rondamica para alteração posterior
     createUser(user: StoreUserDTO): User
 #   Cria uma funcionalidade
-    createFunctionality(functionality: StoreFunctionality): Functionality!
+    createFunctionality(functionality: StoreFunctionality!): Functionality!
 #   Alteração de funcionalidade
-    updateFunctionality(functionality: UpdateFunctionality): Functionality!
+    updateFunctionality(functionality: UpdateFunctionality!): Functionality!
+#   Faz a alteração de um usuário
+    updateUser(userDTO: UpdateUserDTO): UserDTO
 #   Aumenta o nível de um usuário através do login
-    upgradeUser(login: String!): User
+    upgradeAuthUser(login: String!): User
+#   Deletar usuário
+    deleteUser(login: String!): Boolean
 }
 
-
-input PasswordChange{
-    currentPassword: String!
-    newPassword: String!
-}

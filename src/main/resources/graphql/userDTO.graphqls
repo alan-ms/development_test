@@ -2,7 +2,7 @@ type UserDTO  {
     id: ID
     login: String
     email: String
-    activated: String
+    activated: Boolean
     langKey: String
     createdBy: String
     createdDate: String
@@ -20,4 +20,12 @@ input StoreUserDTO {
     login: String!
     email: String!
     langKey: String!
+}
+
+input UpdateUserDTO {
+    id: Int!
+    email: String!
+    activated: Boolean!
+    langKey: String!
+    authorities: [InputAuthority]!
 }

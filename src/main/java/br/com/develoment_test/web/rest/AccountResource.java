@@ -63,8 +63,8 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
      */
-//    @PreAuthorize("@functionalityRepository." +
-//        "getByNameAndAuthority_Name(\"registerAccount\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"registerAccount\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
     @ResponseStatus(HttpStatus.CREATED)
     public User registerAccount(@Valid ManagedUserVM managedUserVM) {
         System.out.println();

@@ -1,8 +1,10 @@
 type Query {
 #   Lista os Perfis do sistema
     getAuthorities: [String]
-#   Mostra detalhes de usuário pelo login
+#   Mostra detalhes de um usuário pelo login
     getUser(login: String!): UserDTO
+#   Mostra o usuário atual do sistema
+    getAccount: UserDTO
 #   Lista todas as funcionalidades cadastradas
     getAllFunctionalities: [Functionality]!
 #   Mostra uma detalhes de um funcionalidade

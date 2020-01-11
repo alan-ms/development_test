@@ -3,5 +3,9 @@ type Authority {
 }
 
 input ShowAuthority {
+    name: String
+}
+
+input InputAuthority {
     name: String!
 }

@@ -12,3 +12,8 @@ input StoreUser {
     langKey: String!
     password: String!
 }
+
+input PasswordChange{
+    currentPassword: String!
+    newPassword: String!
+}

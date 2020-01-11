@@ -12,7 +12,6 @@ import br.com.develoment_test.web.rest.errors.EmailAlreadyUsedException;
 import br.com.develoment_test.web.rest.errors.LoginAlreadyUsedException;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import io.github.jhipster.web.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,7 +71,9 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
         this.mailService = mailService;
     }
 
-    public User upgradeUser(String login) {
+    @PreAuthorize("@functionalityRepository." +
+        "getByNameAndAuthority_Name(\"upgradeAuthUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public User upgradeAuthUser(String login) {
         if(!userRepository.findOneByLogin(login).isPresent()) {
             throw new UserWithLoginNotExists();
         } else {
@@ -173,8 +174,8 @@ public class UserResource implements GraphQLMutationResolver, GraphQLQueryResolv
      */
     @PreAuthorize("@functionalityRepository." +
         "getByNameAndAuthority_Name(\"deleteUser\", \"" + AuthoritiesConstants.ADMIN + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<Void> deleteUser(String login) {
+    public Boolean deleteUser(String login) {
         userService.deleteUser(login);
-        return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName,  "A user is deleted with identifier " + login, login)).build();
+        return true;
     }
 }

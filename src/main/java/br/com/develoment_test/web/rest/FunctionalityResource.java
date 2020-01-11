@@ -68,7 +68,7 @@ public class FunctionalityResource implements GraphQLMutationResolver, GraphQLQu
      * {@code GrahpQL getAllFunctionalities } : get all the functionalities.
      */
     @PreAuthorize("@functionalityRepository." +
-        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+        "getByNameAndAuthority_Name(\"createUser\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
     public List<Functionality> getAllFunctionalities() {
         return functionalityService.findAll();
     }
@@ -87,7 +87,7 @@ public class FunctionalityResource implements GraphQLMutationResolver, GraphQLQu
     /**
      * {@code GraphQL deleteFunctionality } : delete the "id" functionality.graphqls.
      *
-     * @param id the id of the functionality.graphqls to delete.
+     * @param id the id of the functionality to delete.
      */
     @PreAuthorize("@functionalityRepository." +
         "getByNameAndAuthority_Name(\"getFunctionality\", \"" + AuthoritiesConstants.ADMIN + "\") != null && hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")

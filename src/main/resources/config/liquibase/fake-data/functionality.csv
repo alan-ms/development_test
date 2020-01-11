@@ -5,3 +5,7 @@ id;name;authority_name
 4;authorize;ROLE_ANONYMOUS
 5;requestPasswordReset;ROLE_ANONYMOUS
 6;finishPasswordReset;ROLE_ANONYMOUS
+7;createFunctionality;ROLE_ADMIN
+8;updateFunctionality;ROLE_ADMIN
+9;getAllFunctionalities;ROLE_ANONYMOUS
+10;upgradeAuthUser;ROLE_ADMIN

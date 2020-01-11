@@ -29,6 +29,15 @@ public class Functionality implements Serializable {
     @JsonIgnoreProperties("functionalities")
     private Authority authority;
 
+    public Functionality() {
+    }
+
+    public Functionality(Long id, String name, Authority authority) {
+        this.id = id;
+        this.name = name;
+        this.authority = authority;
+    }
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;

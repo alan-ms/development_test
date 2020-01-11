@@ -1,7 +1,6 @@
 package br.com.develoment_test;
 
 import io.github.jhipster.config.DefaultProfileUtil;
-
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
@@ -19,4 +18,13 @@ public class ApplicationWebXml extends SpringBootServletInitializer {
         DefaultProfileUtil.addDefaultProfile(application.application());
         return application.sources(DevelopmentTestApp.class);
     }
+
+//    @Bean
+//    public CommandLineRunner run(AuthorityRepository authorityRepository, FunctionalityRepository functionalityRepository) throws Exception{
+//        return (String[] args) -> {
+//            Authority authority1 = new Authority(AuthoritiesConstants.ANONYMOUS);
+//            Functionality functionality1 = new Functionality(1001L, "registerAccount", authority1);
+//            System.out.println("aqui!");
+//        };
+//    }
 }
