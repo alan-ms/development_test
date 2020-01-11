@@ -1,4 +1,6 @@
 type Query {
 #   Pegar a lista de Perfis do sistema
     getAuthorities: [String]
+#   Pegar todos os usuários
+    getUser(login: String!): UserDTO
 }

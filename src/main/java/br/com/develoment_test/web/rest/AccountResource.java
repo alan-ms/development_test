@@ -63,8 +63,8 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
      */
-    @PreAuthorize("@functionalityRepository." +
-        "getByNameAndAuthority_Name(\"registerAccount\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
+//    @PreAuthorize("@functionalityRepository." +
+//        "getByNameAndAuthority_Name(\"registerAccount\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
     @ResponseStatus(HttpStatus.CREATED)
     public User registerAccount(@Valid ManagedUserVM managedUserVM) {
         System.out.println();
@@ -160,13 +160,14 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      * @param mail the mail of the user.
      * @throws EmailNotFoundException {@code 400 (Bad Request)} if the email address is not registered.
      */
-    @PreAuthorize("@functionalityRepository." +
-        "getByNameAndAuthority_Name(\"requestPasswordReset\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
-    public void requestPasswordReset(String mail) {
+//    @PreAuthorize("@functionalityRepository." +
+//        "getByNameAndAuthority_Name(\"requestPasswordReset\", \"" + AuthoritiesConstants.ADMIN + "\") != null")
+    public String requestPasswordReset(String mail) {
        mailService.sendPasswordResetMail(
            userService.requestPasswordReset(mail)
                .orElseThrow(EmailNotFoundException::new)
        );
+       return "Requisição de reset de senha realizada!";
     }
 
     /**
@@ -178,7 +179,7 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
      */
     @PreAuthorize("@functionalityRepository." +
         "getByNameAndAuthority_Name(\"finishPasswordReset\", \"" + AuthoritiesConstants.ANONYMOUS + "\") != null")
-    public void finishPasswordReset(KeyAndPasswordVM keyAndPassword) {
+    public String finishPasswordReset(KeyAndPasswordVM keyAndPassword) {
         if (!checkPasswordLength(keyAndPassword.getNewPassword())) {
             throw new InvalidPasswordException();
         }
@@ -188,6 +189,7 @@ public class AccountResource implements GraphQLQueryResolver, GraphQLMutationRes
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this reset key");
         }
+        return "Senha resetada";
     }
 
     private static boolean checkPasswordLength(String password) {

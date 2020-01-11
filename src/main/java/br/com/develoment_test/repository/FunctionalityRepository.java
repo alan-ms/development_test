@@ -12,11 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FunctionalityRepository extends JpaRepository<Functionality, Long> {
 
-
-    public Functionality getByName(String name);
-
-//    @Query("SELECT f FROM Functionality as f WHERE name = ?1 and authority_name = ?2")
-//    public Functionality getFunctionalityByNameAndAuthority_Name(String name, String authority);
-
     public Functionality getByNameAndAuthority_Name(String name, String authority_name);
+
 }

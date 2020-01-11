@@ -1,0 +1,12 @@
+type UserDTO  {
+    id: ID
+    login: String
+    email: String
+    activated: String
+    langKey: String
+    createdBy: String
+    createdDate: String
+    lastModifiedBy: String
+    lastModifiedDate: String
+    authorities: [String]
+}

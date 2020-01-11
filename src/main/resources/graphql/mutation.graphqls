@@ -2,5 +2,9 @@ type Mutation {
 #   Criar conta de usuário
     registerAccount(user: StoreUser): User
 #   Realizar login
-    authorize(loginVM: LoginUser): JWTToken
+    authorize(loginVM: LoginUser): JWTToken!
+#   Requisitando o reset do senha
+    requestPasswordReset(email: String): String!
+##   Finalização do reset de senha
+    finishPasswordReset(keyPassword: StoreKeyPassword): String
 }

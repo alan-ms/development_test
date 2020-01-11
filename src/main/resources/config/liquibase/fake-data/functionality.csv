@@ -1,11 +1,7 @@
 id;name;authority_name
-1;AI capability Granite;ROLE_ADMIN
-2;benchmark Savings Account;ROLE_ADMIN
-3;Frozen Implementation Refined;ROLE_ADMIN
-4;Fantastic Plastic Cheese SMTP invoice;ROLE_ADMIN
-5;circuit;ROLE_ADMIN
-6;Quality Small networks;ROLE_ADMIN
-7;yellow open-source;ROLE_ADMIN
-8;overriding optical;ROLE_ADMIN
-9;Home Loan Account;ROLE_ADMIN
-10;Computer Shoes Cliff;ROLE_ADMIN
+1;getUser;ROLE_ADMIN
+2;getAuthorities;ROLE_ADMIN
+3;registerAccount;ROLE_ANONYMOUS
+4;authorize;ROLE_ANONYMOUS
+5;requestPasswordReset;ROLE_ANONYMOUS
+6;finishPasswordReset;ROLE_ANONYMOUS
